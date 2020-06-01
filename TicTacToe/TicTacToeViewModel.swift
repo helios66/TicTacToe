@@ -20,7 +20,6 @@ struct TicTacToe: ViewModel {
 
 	mutating func undoLastPlay(_ undoDone: () -> Void) -> Int {
 		if !self.fullGameStack.isEmpty {
-			debugPrint("gameplay stack \(self.gameplayStack)")
 			let lastPlayedIndex = self.fullGameStack.removeLast()
 			self.play[lastPlayedIndex] = nil
 			if playerXStack.contains(lastPlayedIndex) {
@@ -40,15 +39,21 @@ struct TicTacToe: ViewModel {
 		return self.gameplayStack.isEmpty ? 0: self.gameplayStack.removeLast()
 	}
 
-	func evaluateWin(wincase: (WinState) -> Void) {
-		for state in validWins {
-			if contains(sequence: self.playerXStack, state: state) {
-				wincase(.xwon)
-				return
+	func evaluateWin(lastPlayer: Int, wincase: (WinState) -> Void) {
+
+		if lastPlayer == 0 {
+			for state in validWins {
+				if contains(sequence: self.playerXStack, state: state) {
+					wincase(.xwon)
+					return
+				}
 			}
-			if contains(sequence: self.playerOStack, state: state) {
-				wincase(.owon)
-				return
+		} else {
+			for state in validWins {
+				if contains(sequence: self.playerOStack, state: state) {
+					wincase(.owon)
+					return
+				}
 			}
 		}
 
@@ -80,7 +85,7 @@ struct TicTacToe: ViewModel {
 		} else {
 			self.playerOStack.append(cellPlayed)
 		}
-		evaluateWin(wincase: status)
+		evaluateWin(lastPlayer: lastPlayer, wincase: status)
 		return lastPlayer == 0 ? 1: 0
 	}
 
