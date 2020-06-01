@@ -52,10 +52,12 @@ extension ViewController {
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let nextPlayer = self.viewModel.updateGame(lastPlayer: self.selectedPlayoption.selectedSegmentIndex,
-												   cellPlayed: indexPath.row, status: {
+		let lastPlayer = self.selectedPlayoption.selectedSegmentIndex
+		let nextPlayer = self.viewModel.updateGame(lastPlayer: lastPlayer,
+												   cellPlayed: indexPath.row,
+												   status: {
 													[weak self] (state) in
-													self?.showAlert(string: state.rawValue)
+				self?.showAlert(string: state.rawValue)
 		})
 		self.selectedPlayoption.selectedSegmentIndex = nextPlayer
 		collectionView.reloadData()
